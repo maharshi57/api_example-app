@@ -1,13 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Auth;
 use App\Models\Student;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
+// use Illuminate\Routing\Controllers\HasMiddleware;
+// use Illuminate\Routing\Controllers\Middleware;
 
-class StudentController extends Controller implements HasMiddleware
+class StudentController extends Controller //implements HasMiddleware
 {
     // public static function middleware(){
     //     return
@@ -37,7 +37,15 @@ class StudentController extends Controller implements HasMiddleware
 
         ]);
         $student= Student::create($fileds);
-        return [ 'student' => $student ];
+
+        $token = $student->createToken($request->name);
+        return [
+            'student'=> $student,
+            'token'=> $token->plainTextToken
+
+        ];
+
+        // return [ 'student' => $student ];
     }
 
     /**
@@ -45,7 +53,8 @@ class StudentController extends Controller implements HasMiddleware
      */
     public function show(Student $student)
     {
-        return $student ;
+        // $student = Auth::$student();
+        return response()->json($student);
     }
 
     /**
